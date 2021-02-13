@@ -11,7 +11,7 @@ PATHE:	DB	0
 
 OK:	DB	"Ok$"
 SKIP:	DB	"Skip$"
-KBFREE:	DB	"k bytes free",9,"$"
+KBFREE:	DB	"k bytes free",9,'$'
 DIRMES:	DB	"    dir $"
 COMERM:	DB	7,"Error!$"
 
@@ -87,10 +87,10 @@ COMMAND:
 	CALL	SETDTA1
 	PUSH	DE
 	LD	A,(_DVSW)
-	ADD	A,"A"
+	ADD	A,'A'
 	LD	E,A
 	CALL	_PRINT
-	LD	E,">"
+	LD	E,'>'
 	CALL	_PRINT
 	POP	DE		;DE=DTA1
 	LD	A,80
@@ -126,7 +126,7 @@ COMANL:
 	CALL	CPNAME
 COMB:
 	POP	DE
-	JP	NC,[HL]
+	JP	NC,_HL_
 	EX	DE,HL
 	LD	(COMPAT+1),HL
 	LD	(BATPAT+1),HL
@@ -223,7 +223,7 @@ CEXE4:
 	LD	A,(HL)
 	CP	$20
 	JR	NZ,CEXE7
-	LD	A,"?"
+	LD	A,'?'
 	LD	(HL),A
 	INC	HL
 	LD	(HL),A
@@ -242,9 +242,9 @@ CEXE5:
 	LD	L,A
 	LD	A,(DTA+1+8)
 	CALL	CAP
-	SUB	"B"
+	SUB	'B'
 	JR	Z,C_BAT
-	DEC	A		;"C"
+	DEC	A		;'C'
 	JR	Z,C_EXE
 CEXE6:
 	CALL	OPEN2
@@ -252,7 +252,7 @@ CEXE6:
 
 C_EXE:
 	LD	A,H
-	CP	"M"
+	CP	'M'
 	JR	NZ,CEXE6
 
 	CALL	DEFCB
@@ -277,7 +277,7 @@ COMPAT:	LD	DE,0
 	JP	$0100
 
 C_BAT:
-	LD	DE,"A"+"T"*256
+	LD	DE,'A'+'T'*256
 	SBC	HL,DE
 	JR	NZ,CEXE6
 
@@ -305,7 +305,7 @@ BAT1:
 	DEC	B
 	RET	Z
 	LD	A,(HL)
-	CP	"%"
+	CP	'%'
 	JR	Z,BAT2
 BAT1X:
 	LD	A,(HL)
@@ -320,7 +320,7 @@ BAT2:
 	INC	HL
 	LD	A,(HL)
 	DEC	HL
-	SUB	"1"
+	SUB	'1'
 	JR	C,BAT1X
 	CP	9
 	JR	NC,BAT1X
@@ -420,7 +420,7 @@ PDSKF1:
 	LD	DE,KBFREE
 	CALL	_SYS09
 	CALL	PUTDRV
-	LD	A,"\"
+	LD	A,'\'
 	CALL	MSG
 	LD	HL,(FDRV+14)
 	LD	A,H
@@ -434,18 +434,18 @@ PDSKF1:
 
 P_NAME:
 	LD	A,(DTA+1)
-	CP	"."
+	CP	'.'
 	RET	Z
 	LD	A,$20
 	CALL	MSG
 	CALL	MSG
-	LD	A,":"
+	LD	A,':'
 	CALL	MSG
 	LD	A,(DTA+1+$0B)
 	PUSH	AF
 	RRCA
 	SBC	A,A
-	AND	"*"-$20
+	AND	'*'-$20
 	ADD	A,$20
 	LD	B,7
 MZX:
@@ -496,7 +496,7 @@ CPATHP:
 	CALL	MSG
 	JR	CPATHP
 CPATH0:
-	CP	";"
+	CP	';'
 	JR	NZ,CPATH1
 	INC	DE
 CPATH1:
@@ -507,9 +507,9 @@ CPATH1:
 
 PUTDRV:
 	LD	A,(FDRV)
-	ADD	A,"A"-1
+	ADD	A,'A'-1
 	CALL	MSG
-	LD	A,":"
+	LD	A,':'
 MSGR:
 	JP	MSG
 
@@ -567,7 +567,7 @@ FPRNT:
 	ADD	A,$A0-$20
 	CP	$A0
 	JR	Z,FPR1
-	LD	A,"."
+	LD	A,'.'
 FPR1:
 	CALL	MSG
 	LD	B,3
@@ -602,11 +602,11 @@ PRTTMS:
 	LD	A,H
 	ADD	A,80
 	CALL	PRTA
-	LD	A,"-"
+	LD	A,'-'
 	CALL	MSG
 	LD	A,D
 	CALL	PRTA
-	LD	A,"-"
+	LD	A,'-'
 	CALL	MSG
 	LD	A,L
 	AND	$1F
@@ -626,14 +626,14 @@ PRTTMS:
 	RR	L
 	AND	$1F
 	CALL	PRTA
-	LD	A,":"
+	LD	A,':'
 	CALL	MSG
 	LD	A,L
 	RRCA
 	RRCA
 	AND	$3F
 	CALL	PRTA
-	LD	A,":"
+	LD	A,':'
 	CALL	MSG
 	LD	A,H
 	AND	$1F
@@ -705,7 +705,7 @@ SETFCB3:
 C_COPY:
 	CALL	SETFCB
 	LD	DE,DTA1+1
-	LD	C,"/"
+	LD	C,'/'
 	CALL	SWITCH
 	CALL	CAP
 	LD	(SW+1),A
@@ -761,7 +761,7 @@ COPY1A:
 COPY2:
 	PUSH	AF
 	LD	A,(HL)
-	CP	"?"
+	CP	'?'
 	JR	NZ,COPY3
 	LD	A,(BC)
 COPY3:
@@ -784,12 +784,12 @@ PUTNAME:
 	CALL	MSG
 PUTN1:
 SW:	LD	A,$00
-	CP	"T"
+	CP	'T'
 	JR	NZ,CSW1
 	LD	HL,SWNE
 	JR	SWT1
 CSW1:
-	CP	"N"
+	CP	'N'
 	JR	NZ,SWNE
 	LD	HL,COPYS
 SWT1:
@@ -906,7 +906,7 @@ CWILD2:
 	LD	E,L
 	INC	DE
 	LD	BC,10
-	LD	(HL),"?"
+	LD	(HL),'?'
 	LDIR
 	RET
 
@@ -918,4 +918,3 @@ BUFSIZ:
 	LD	L,0
 	RET
 
-

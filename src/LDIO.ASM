@@ -204,11 +204,11 @@ FKEY:
 	LD	A,$1B
 	CALL	KEYBS1
 	LD	A,L
-	ADD	A,$20-"q"
+	ADD	A,$20-'q'
 	BIT	7,L
 	RET	Z
-	LD	L,"P"
-	SUB	$E1+$20-"q"
+	LD	L,'P'
+	SUB	$E1+$20-'q'
 	JR	Z,KEYBSL
 	INC	L
 	DEC	A
@@ -216,10 +216,10 @@ FKEY:
 	INC	L
 	SUB	$EB-$E2
 	JR	Z,KEYBSL
-	LD	L,"C"
+	LD	L,'C'
 	DEC	A
 	JR	Z,KEYBSL
-	LD	L,"X"
+	LD	L,'X'
 KEYBSL:
 	LD	A,L
 	JR	KEYBS1
@@ -487,37 +487,37 @@ MSX:
 
 ESC1:
 	LD	A,E
-	CP	"A"
+	CP	'A'
 	JP	Z,CTRL1E
-	CP	"B"
+	CP	'B'
 	JP	Z,CTRL1F
-	CP	"C"
+	CP	'C'
 	JP	Z,CTRL1C
-	CP	"D"
+	CP	'D'
 	JP	Z,CTRL1D
-	CP	"E"
+	CP	'E'
 	JR	Z,CT0CX
-	CP	"j"
+	CP	'j'
 CT0CX:
 	JP	Z,CTRL0C
-	CP	"H"
+	CP	'H'
 	JP	Z,CTRL0B
-	CP	"J"
+	CP	'J'
 	JP	Z,CTRL1A
-	CP	"K"
+	CP	'K'
 	JP	Z,CTRL05
-	CP	"L"
+	CP	'L'
 	JP	Z,CTRL0E
-	CP	"x"
+	CP	'x'
 	JR	Z,ESC1X
-	CP	"y"
+	CP	'y'
 	JR	NZ,ESC1Y
 ESC1X:
 	LD	(HL),1
 ESC1Y:
-	CP	"="
+	CP	'='
 	JR	Z,ESC1W
-	CP	"Y"
+	CP	'Y'
 	JR	NZ,ESC1Z
 ESC1W:
 	LD	(HL),2
@@ -610,7 +610,7 @@ CTRL:
 	INC	HL
 	LD	H,(HL)
 	LD	L,A
-	CALL	[HL]
+	CALL	_HL_
 	JR	PRINTE5
 
 KANJI2:
@@ -1211,4 +1211,3 @@ BEEPD:
 	DB	$07,$3E,$08,$10,$0D,0,$FF
 
 REDDATA:DB	0
-

@@ -556,7 +556,7 @@ CHGDRV0:
 	POP	HL
 	LD	A,H
 	LD	(SECPAT+1),A
-	XOR	A		;CF=0 … ¿“
+	XOR	A		;CF=0 „Çø„É°
 	LD	H,A
 	LD	(_DIRPS),HL
 
@@ -688,4 +688,3 @@ M2HS:
 	DB	$FE,10,80,9,1,1,4,10
 
 CHECK:	DB	0
-

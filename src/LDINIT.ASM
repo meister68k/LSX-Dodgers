@@ -406,7 +406,7 @@ INIMES2:
 	CP	8
 	JR	NC,INIT0
 	LD	E,A
-	ADD	A,"A"
+	ADD	A,'A'
 	LD	(AUTODV),A
 	LD	C,$0E
 	CALL	SYSTEM
@@ -527,11 +527,11 @@ SETCRT1:
 AUTOD:	DB	"AUTOEXEC "
 AUTODV:	DB	"A:",0
 
-INIMES:	DB	"¥LSX-Dodgers for X1/turbo version "
-	DB	"0"+VER/256(MOD)16,"."
-	DB	"0"+VER/16(MOD)16,"0"+VER(MOD)16
+INIMES:	DB	BLTMARK,"LSX-Dodgers for X1/turbo version "
+	DB	'0'+VER/256 % 16,'.'
+	DB	'0'+VER/16 % 16,'0'+VER % 16
 	DB	$0D,$0A
-	DB	"¥by Gaku Nakagawa as Larn M.R.(Lovers)",$0D,$0A
+	DB	BLTMARK,"by Gaku Nakagawa as Larn M.R.(Lovers)",$0D,$0A
 	DB	0
 
 C8025H:	DB	$6B,$50,$59,$88,$1B,$01,$19,$1A
@@ -766,7 +766,7 @@ DISKD:
 
 	POP	DE
 	CALL	CAP
-	CP	"R"
+	CP	'R'
 	JR	NZ,@DELP3
 DHLPAT:	LD	HL,0
 	LD	A,2
@@ -774,9 +774,9 @@ DHLPAT:	LD	HL,0
 	OR	A
 	RET
 @DELP3:
-	CP	"I"
+	CP	'I'
 	JR	Z,@IGNORE
-	CP	"A"
+	CP	'A'
 	JR	NZ,@DELP1
 	JP	BOOT
 @IGNORE:
@@ -902,4 +902,3 @@ DHLPAT:	LD	HL,0
 @CPUE:
 INITE:
 	DS	$CC06-INITE
-

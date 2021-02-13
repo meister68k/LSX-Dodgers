@@ -1,4 +1,42 @@
-﻿・LSX-Dodgers for X1/turbo version 1.23
+﻿・LSX-Dodgersをlinuxでビルドする
+2021-02-13 by Meister
+
+
+●概要
+
+ 本フォークはX1用の名作OS、LSX-Dodgersのソースをlinux環境でクロスビルド
+できるように整備たものです。
+ LSX-Dodgersのオリジナルソースに含まれるOHM-Z80(※1)独自マクロを展開し、
+Z80アセンブラのPasmo(※2)でアセンブルできるよう改変してあります。
+
+※1 S-OS上でのみ動作する超多機能マクロアブソリュートアセンブラ
+    Oh!X誌,1990年3月号,p.130～p.160 に掲載
+※2 easy to use Z80 cross-assembler, https://pasmo.speccy.org/
+    Ubuntuなら apt install pasmo でインストールできる
+
+
+●主な改変内容
+
+1. EX DE,IY を PUSH DE : EX (SP),IY : POP DE に展開
+2. 擬似命令($INCLUDE、$CHAIN)の置き換え
+3. ラベル名に使用できない文字([]!)を_に置換
+4. 文字定数"A"を'A'に
+5. 非ASCII文字(半角の・)をマクロ(BLTMARK)で指定
+6. ソースフォルダ構成の変更
+7. makefile追加
+
+
+●よくわかっていない点
+
+ オリジナルバイナリの先頭7バイト(fe 00 c6 e0 ed 00 c6)の意味がわかっていません。
+(8バイト目からが$c600～のイニシャル・プログラムになっている)
+ とりあえず同じ7バイトをそのまま先頭に入れています。
+
+
+以下、オリジナルのREADME.TXT
+----------------------------------------------------------------------
+
+・LSX-Dodgers for X1/turbo version 1.23
 ・by Gaku
 
 A>■

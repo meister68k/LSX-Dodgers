@@ -164,7 +164,7 @@ RNF:
 	RET
 
 DEMES:	DB	3,7
-	DB	"¥Device I/O Error!",5,3
+	DB	BLTMARK,"Device I/O Error!",5,3
 	DB	"Abort Retry Ignore?",5,3,0
 
 RETRY:	DB	2
@@ -260,11 +260,11 @@ DELP2:
 
 	POP	DE
 	CALL	CAP
-	CP	"R"
+	CP	'R'
 	JP	Z,DISKR
-	CP	"I"
+	CP	'I'
 	JR	Z,IGNORE
-	CP	"A"
+	CP	'A'
 	JR	NZ,DELP1
 	JP	BOOT
 IGNORE:
@@ -493,5 +493,4 @@ S1FD0:
 
 @R	EQU	WTTRK-@WTTRK
 
-PE:
-
+;PE:

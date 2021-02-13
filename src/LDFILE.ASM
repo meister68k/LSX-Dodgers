@@ -21,17 +21,17 @@ FILE:
 	INC	DE
 	LD	A,(DE)
 	DEC	DE
-	CP	":"
+	CP	':'
 	JR	NZ,DEVI1
 	LD	A,(DE)		;DRIVE
 	CALL	CAP
-	SUB	"@"
+	SUB	'@'
 	INC	DE
 	INC	DE
 	LD	(FDRV),A
 DEVI1:
 	LD	A,(DE)
-	SUB	"\"
+	SUB	'\'
 	JR	NZ,NOROOT
 	LD	HL,0
 	LD	(FDRV+26),HL
@@ -43,7 +43,7 @@ NOROOT:
 SETDIR:
 	CALL	FILED
 	LD	A,(DE)
-	CP	"\"
+	CP	'\'
 	RET	NZ
 	INC	DE
 SETDIR1:
@@ -52,7 +52,7 @@ SETDIR1:
 	PUSH	DE
 	LD	DE,FDRV
 	LD	HL,(STABLE+2*$0F)
-	CALL	[HL]
+	CALL	_HL_
 	POP	DE
 	OR	A
 	RET	NZ
@@ -74,9 +74,9 @@ FILED:
 FILE2:
 	CALL	CCHKF
 	RET	Z
-	CP	"*"
+	CP	'*'
 	JR	Z,FILE9
-	CP	"."
+	CP	'.'
 	JR	Z,FILE4
 	LD	(HL),A
 	INC	HL
@@ -85,7 +85,7 @@ FILE2:
 FILE3:
 	CALL	CCHKF
 	RET	Z
-	CP	"."
+	CP	'.'
 	JR	NZ,FILE3
 
 FILE4:
@@ -95,13 +95,13 @@ FILE4:
 FILE4L:
 	CALL	CCHKF
 	RET	Z
-	CP	"."
+	CP	'.'
 	JR	NZ,FILE12
 	LD	(FNAME),A	;Parent directory(..)
 	LD	(FNAME+1),A
 	LD	A,$20
 FILE12:
-	CP	"*"
+	CP	'*'
 	JR	Z,FILE10
 	LD	(HL),A
 	INC	HL
@@ -113,7 +113,7 @@ FILE9:
 	JR	FILE3
 
 FILE10:
-	LD	A,"?"
+	LD	A,'?'
 
 FILE7:
 	LD	(HL),A
@@ -141,19 +141,19 @@ CCHK2:
 	DEC	C
 	RET	NZ
 CCHK3:
-	CP	"+"
+	CP	'+'
 	RET	Z
-	CP	","
+	CP	','
 	RET	Z
-	CP	"/"
+	CP	'/'
 	RET	Z
-	CP	":"
+	CP	':'
 	RET	Z
-	CP	";"
+	CP	';'
 	RET	Z
-	CP	"="
+	CP	'='
 	RET	Z
-	CP	"\"
+	CP	'\'
 	RET	Z
 	CP	$20
 	RET	NC
@@ -183,7 +183,9 @@ SETDRV:
 	PUSH	DE		;PUSH HL/DE/BC/IY
 	PUSH	BC
 	LD	A,(DE)
-	EX	DE,IY
+	push	DE		; [OHM-Z80] EX DE,IY
+	ex	(SP),IY		; [OHM-Z80] EX DE,IY
+	pop	DE		; [OHM-Z80] EX DE,IY
 	PUSH	DE
 	CALL	GETDRV
 	INC	A
@@ -249,7 +251,7 @@ SOPEN0:
 	JR	C,SDIRX0
 	LD	HL,(_DTBUF)
 	LD	A,(HL)
-	CP	"."
+	CP	'.'
 	JR	Z,SOPEN1
 SDIRX0:
 	XOR	A
@@ -472,7 +474,7 @@ CPFILE:
 	LD	BC,$0B00
 CPSTR1:
 	LD	A,(DE)
-	CP	"?"		;Wild card
+	CP	'?'		;Wild card
 	JR	Z,CPSTR2
 	LD	A,(HL)
 	CALL	FKANC
@@ -527,9 +529,9 @@ CLPAT2:	CP	$64	;		(Self-rewriting)
 	RET
 
 CAP:
-	CP	"a"
+	CP	'a'
 	RET	C
-	CP	"z"+1
+	CP	'z'+1
 	RET	NC
 	SUB	$20
 	RET
@@ -550,16 +552,16 @@ CAP4:
 CHDIR:
 	CALL	GETDPBD
 	JR	C,CHDIR2
-	LD	(IX+!SDIR),L
-	LD	(IX+!SDIR+1),H
+	LD	(IX+(_SDIR-DEVICE)),L
+	LD	(IX+(_SDIR+1-DEVICE)),H
 CHDIR2:
 	POP	IX
 	RET
 
 LDDIR:
 	CALL	GETDPBD
-	LD	E,(IX+!SDIR)
-	LD	D,(IX+!SDIR+1)
+	LD	E,(IX+(_SDIR-DEVICE))
+	LD	D,(IX+(_SDIR+1-DEVICE))
 	INC	DE
 	LD	(IY+14),E
 	LD	(IY+15),D
@@ -722,7 +724,7 @@ CHKWILDX:
 	INC	HL
 CHKWILD:
 	LD	B,11
-	LD	A,"?"
+	LD	A,'?'
 CHKWIL1:
 	CP	(HL)
 	INC	HL
@@ -1006,17 +1008,21 @@ SETRBR:
 	LD	HL,128
 	RET
 
-[DE26]:
+_DE26_:
 	LD	DE,(STABLE+2*$26)
-	JR	[DE1]
-[DE27]:
+	JR	_DE1_
+_DE27_:
 	LD	DE,(STABLE+2*$27)
-[DE1]:
-	CALL	[DE]
-	EX	DE,IY
+_DE1_:
+	CALL	_DE_
+	push	DE		; [OHM-Z80] EX DE,IY
+	ex	(SP),IY		; [OHM-Z80] EX DE,IY
+	pop	DE		; [OHM-Z80] EX DE,IY
 	RET
-[DE]:
-	EX	DE,IY
+_DE_:
+	push	DE		; [OHM-Z80] EX DE,IY
+	ex	(SP),IY		; [OHM-Z80] EX DE,IY
+	pop	DE		; [OHM-Z80] EX DE,IY
 	JP	(IY)
 
 SCDIR:	DS	2		;+14 +15
@@ -1028,4 +1034,3 @@ HLBUF:	DS	3		;Random record buffer
 _FATPS:	DW	0
 _DIRPS:	DW	0
 _CLPS:	DW	0
-
